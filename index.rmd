@@ -76,13 +76,13 @@ dim(testing);
 
 
 <h1> Modeling</h1>
-<pre> For modeling, random forests algorithm is being used. Because, after partitioning the training data set as training and validating data set. The training data set is used to train the model and validating data set is used to calculate accuracy of the model.From the confusion Matrix, the following information are found - 
-    Accuracy : 99.93%          
-    95% CI : (0.9983, 0.9998)
-    Error Rate : 0.2845  
-	kappa : 0.9991   
+<p> For modeling, random forests algorithm is being used. Because, after partitioning the training data set as training and validating data set. The training data set is used to train the model and validating data set is used to calculate accuracy of the model.From the confusion Matrix, the following information are found - <br>
+    Accuracy : 99.93% <br>         
+    95% CI : (0.9983, 0.9998)<br>
+    Error Rate : 0.2845  <br>
+	kappa : 0.9991  <br> 
 The random forests algorithm is providing more than 99% accuracy. For this reasong, the raondom forest model is being used for the project. 
-</pre>
+</p>
 
 <div style="background-color:#E8E8E8;color:black;margin-left:100px;">
 <pre>
@@ -94,5 +94,30 @@ confusionMatrix(predictionRF, validating$classe);
 </div>
 
 <h1> Testing and Final results</h1>
+
+<p>
+For final result, testing data set is used to predict in random forest model. After that, for each 20 test cases, the class assignment has shown .
+</p>
+
+
+<div style="background-color:#E8E8E8;color:black;margin-left:100px;">
+<pre>
+# removed problem id
+testing <- testing[,-ncol(testing)];
+#Coerce testing data set as same as trining data set
+testing <- rbind(training[1, -59] , testing);
+testing <- testing[-1,];
+dim(testing);
+pred <- predict(modRF,newdata=testing);
+print(pred);
+
+len = length(pred);
+
+for (i in 1: len){
+  print(paste0("Problem ID : ", i, " Assigned class :  ", predictions[i]));
+}
+</pre>
+</div>
+
 </body>
 </html>
