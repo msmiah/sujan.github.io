@@ -1,3 +1,98 @@
-<h1>Project Summary</h1>
+<!DOCTYPE html>
+<html>
+<body>
 
-theme: jekyll-theme-modernist
+
+<h1>Project Summary</h1>
+<p>
+
+Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement – a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. In this project, your goal will be to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways. More information is available from the website here: http://groupware.les.inf.puc-rio.br/har (see the section on the Weight Lifting Exercise Dataset).
+
+<p>
+
+<h1> Data </h1>
+<p>
+The training data for this project are available here:<br>
+</p>
+<a href="https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv">
+https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv</a>
+<p>
+The test data are available here:
+</p>
+<a href="https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv">
+https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv
+</a>
+<p>
+The data for this project come from this source: http://groupware.les.inf.puc-rio.br/har. If you use the document you create for this class for any purpose please cite them as they have been very generous in allowing their data to be used for this kind of assignment.
+</p>
+<h1>Library Loading</h1>
+
+<p> <b>The following librarires are used for implementing the project</b><br></p>
+<div style="background-color:#E8E8E8;color:black;margin-left:100px;">
+library(caret)<br>
+library(rpart)<br>
+library(RCurl)<br>
+library(randomForest)<br>
+library(ElemStatLearn)<br>
+</div>
+
+
+<h1> Loading Data set</h1>
+<p>
+The data set are collected directly by using URL link which are provided in data section. By using training and test data url, the raw training and test data set are created. 
+</p>
+<div style="background-color:#E8E8E8;color:black;margin-left:100px;">
+<pre>
+trainURL <- getURL("https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv");
+testURL <- getURL("https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv");
+
+train_raw  <- read.csv(text = trainURL, header=TRUE, sep=",", na.strings=c("NA",""));
+test_raw  <- read.csv(text = testURL, header=TRUE, sep=",", na.strings=c("NA",""));
+
+
+</pre>
+</div>
+<h1> Data Cleaning and Data partition</h1>
+<P> The first column is removed from training and test data set which is just the row numbers. Then, training data is partitoned for cross validating. As well as, the columns which have missing values are removed from training, testing and validating data set. <p>
+
+<div style="background-color:#E8E8E8;color:black;margin-left:100px;">
+<pre>
+train_data <- train_raw[,-1];
+test_data <- test_raw[,-1];
+
+set.seed(3333);
+inTrain = createDataPartition(train_raw$classe, p=0.70, list=FALSE);
+training = train_data[inTrain,];
+validating = train_data[-inTrain,];
+
+training <-training[,colSums(is.na(training)) == 0]
+validating = validating[,colSums(is.na(validating)) == 0]
+testing <-test_data[,colSums(is.na(test_data)) == 0]
+            #dimention of training and test data
+dim(training);
+dim(testing);
+</pre>
+</div>
+
+
+<h1> Modeling</h1>
+<pre> For modeling, random forests algorithm is being used. Because, after partitioning the training data set as training and validating data set. The training data set is used to train the model and validating data set is used to calculate accuracy of the model.From the confusion Matrix, the following information are found - 
+    Accuracy : 99.93%          
+    95% CI : (0.9983, 0.9998)
+    Error Rate : 0.2845  
+	kappa : 0.9991   
+The random forests algorithm is providing more than 99% accuracy. For this reasong, the raondom forest model is being used for the project. 
+</pre>
+
+<div style="background-color:#E8E8E8;color:black;margin-left:100px;">
+<pre>
+modRF <- randomForest(classe ~. , data=training, method="class");
+print (modRF);
+predictionRF <- predict(modRF, validating, type = "class");
+confusionMatrix(predictionRF, validating$classe);
+</pre>
+</div>
+
+<h1> Testing and Final results</h1>
+</body>
+</html>
