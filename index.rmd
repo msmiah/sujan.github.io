@@ -96,7 +96,7 @@ confusionMatrix(predictionRF, validating$classe);
 <h1> Testing and Final results</h1>
 
 <p>
-For final result, testing data set is used to predict in random forest model. After that, for each 20 test cases, the class assignment has shown .
+For final result, testing data set is used to predict in random forest model. For each 20 test cases, the class assignment has been shown .
 </p>
 
 
